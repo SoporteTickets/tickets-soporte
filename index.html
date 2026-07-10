@@ -306,8 +306,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 </div>
 
 <script>
-const SUPABASE_URL='https://mkaupezvsbsgehfoxxsl.supabase.co';
-const SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1rYXVwZXp2c2JzZ2VoZm94eHNsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE5NjA0NzksImV4cCI6MjA5NzUzNjQ3OX0.40xJtvdkkXTFaPZEWDBFaj9RfFkOLF1ZC5_nBDPGElM';
+const SUPABASE_URL='https://afrdmrumamvmldmjddrc.supabase.co';
+const SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFmcmRtcnVtYW12bWxkbWpkZHJjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM2ODU1MDUsImV4cCI6MjA5OTI2MTUwNX0.0MZLA-_G_IUt0TUQY1Oj-szlMjB_e3hzkVzUMFbcOGI';
 const sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 
 const CATS={
@@ -550,7 +550,7 @@ async function setStatus(est){
   if(est==='Resuelto'){
     const t=allTickets.find(x=>x.id===currentId);
     if(t&&t.user_email){
-      fetch('https://mkaupezvsbsgehfoxxsl.supabase.co/functions/v1/super-task',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1rYXVwZXp2c2JzZ2VoZm94eHNsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE5NjA0NzksImV4cCI6MjA5NzUzNjQ3OX0.40xJtvdkkXTFaPZEWDBFaj9RfFkOLF1ZC5_nBDPGElM'},body:JSON.stringify({tipo:'resuelto',codigo:t.codigo,titulo:t.titulo,categoria:t.categoria,prioridad:t.prioridad,solicitante:t.solicitante,descripcion:t.descripcion,fecha:t.fecha,user_email:t.user_email})}).catch(()=>{});
+      fetch('https://afrdmrumamvmldmjddrc.supabase.co/functions/v1/notify-ticket',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFmcmRtcnVtYW12bWxkbWpkZHJjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM2ODU1MDUsImV4cCI6MjA5OTI2MTUwNX0.0MZLA-_G_IUt0TUQY1Oj-szlMjB_e3hzkVzUMFbcOGI'},body:JSON.stringify({tipo:'resuelto',codigo:t.codigo,titulo:t.titulo,categoria:t.categoria,prioridad:t.prioridad,solicitante:t.solicitante,descripcion:t.descripcion,fecha:t.fecha,user_email:t.user_email})}).catch(()=>{});
     }
   }
   closeDet();await loadTickets();showToast('Estado actualizado a: '+est);
