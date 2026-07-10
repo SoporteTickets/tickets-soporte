@@ -550,7 +550,12 @@ async function setStatus(est){
   if(est==='Resuelto'){
     const t=allTickets.find(x=>x.id===currentId);
     if(t&&t.user_email){
-      fetch('https://afrdmrumamvmldmjddrc.supabase.co/functions/v1/notify-ticket',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFmcmRtcnVtYW12bWxkbWpkZHJjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM2ODU1MDUsImV4cCI6MjA5OTI2MTUwNX0.0MZLA-_G_IUt0TUQY1Oj-szlMjB_e3hzkVzUMFbcOGI'},body:JSON.stringify({tipo:'resuelto',codigo:t.codigo,titulo:t.titulo,categoria:t.categoria,prioridad:t.prioridad,solicitante:t.solicitante,descripcion:t.descripcion,fecha:t.fecha,user_email:t.user_email,departamento:t.departamento})}).catch(()=>{});
+      const payload={tipo:'resuelto',codigo:t.codigo,titulo:t.titulo,categoria:t.categoria||'',prioridad:t.prioridad||'',solicitante:t.solicitante||'',descripcion:t.descripcion||'',fecha:t.fecha||'',user_email:t.user_email,departamento:t.departamento||''};
+      fetch('https://afrdmrumamvmldmjddrc.supabase.co/functions/v1/notify-ticket',{
+        method:'POST',
+        headers:{'Content-Type':'application/json','Authorization':'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFmcmRtcnVtYW12bWxkbWpkZHJjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM2ODU1MDUsImV4cCI6MjA5OTI2MTUwNX0.0MZLA-_G_IUt0TUQY1Oj-szlMjB_e3hzkVzUMFbcOGI'},
+        body:JSON.stringify(payload)
+      }).catch(e=>console.error('Notify error:',e));
     }
   }
   closeDet();await loadTickets();showToast('Estado actualizado a: '+est);
