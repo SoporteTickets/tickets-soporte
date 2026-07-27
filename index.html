@@ -122,7 +122,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .section-label{font-size:12px;color:var(--text3);margin-bottom:6px}
 .toast{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);background:var(--text);color:var(--bg);padding:10px 20px;border-radius:var(--radius);font-size:13px;display:none;align-items:center;gap:8px;z-index:200;white-space:nowrap;box-shadow:0 4px 12px rgba(0,0,0,.15)}
 .toast.show{display:flex}.toast.error{background:var(--red-bg);color:var(--red-text)}
-/* Reports */
 .reports-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem}
 .chart-card{background:var(--bg);border:.5px solid var(--border);border-radius:var(--radius-lg);padding:1rem}
 .chart-card h3{font-size:11px;font-weight:500;color:var(--text3);margin-bottom:.875rem;text-transform:uppercase;letter-spacing:.05em}
@@ -141,7 +140,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 </style>
 </head>
 <body>
-
 <div class="login-screen" id="login-screen">
   <div class="login-box">
     <div class="login-header">
@@ -178,7 +176,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     </div>
   </div>
 </div>
-
 <div class="app-wrap" id="app-wrap">
   <div class="topbar">
     <div class="topbar-left">
@@ -199,8 +196,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
         <button class="nav-tab" id="nav-reportes" onclick="showView('reportes')"><i class="ti ti-chart-bar" style="margin-right:5px"></i>Reportes</button>
       </div>
     </div>
-
-    <!-- SOLICITUDES -->
     <div id="view-solicitudes">
       <div class="page-head">
         <div><h2 id="page-title">Mis solicitudes</h2><p id="page-sub"></p></div>
@@ -230,8 +225,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       </div>
       <div class="ticket-list" id="list"><div class="loading"><i class="ti ti-loader" style="font-size:20px;display:block;margin:0 auto 8px"></i>Cargando…</div></div>
     </div>
-
-    <!-- REPORTES -->
     <div id="view-reportes" style="display:none">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;flex-wrap:wrap;gap:.75rem">
         <div><h2>Reportes</h2><p id="report-sub" style="font-size:12px;color:var(--text3);margin-top:2px"></p></div>
@@ -267,9 +260,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   </div>
   <div class="footer">Desarrollado por <span>Josué Aguilar</span> · Técnico TI · Distrito Hotelero Plaza San Martín · 2026</div>
 </div>
-
 <div class="toast" id="toast"><i class="ti ti-check" id="toast-icon"></i><span id="toast-msg"></span></div>
-
 <div class="modal-wrap" id="modal-new">
   <div class="modal">
     <div class="modal-head"><h2><i class="ti ti-plus" style="margin-right:5px"></i>Nueva solicitud</h2><button class="close-btn" onclick="closeNew()">×</button></div>
@@ -284,7 +275,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     <div class="modal-btns"><button class="btn-cancel" onclick="closeNew()">Cancelar</button><button class="btn-submit" id="btn-create" onclick="createTicket()">Enviar solicitud</button></div>
   </div>
 </div>
-
 <div class="modal-wrap" id="modal-det">
   <div class="modal">
     <div class="modal-head"><div><div style="font-size:11px;color:var(--text3)" id="d-id"></div><h2 id="d-title" style="font-size:15px;margin-top:2px"></h2></div><button class="close-btn" onclick="closeDet()">×</button></div>
@@ -304,30 +294,25 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     <div class="modal-btns"><button class="btn-danger" id="btn-delete" style="display:none" onclick="deleteTicket()"><i class="ti ti-trash" style="margin-right:3px"></i>Eliminar</button><button class="btn-cancel" onclick="closeDet()">Cerrar</button></div>
   </div>
 </div>
-
 <script>
 const SUPABASE_URL='https://afrdmrumamvmldmjddrc.supabase.co';
 const SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFmcmRtcnVtYW12bWxkbWpkZHJjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM2ODU1MDUsImV4cCI6MjA5OTI2MTUwNX0.0MZLA-_G_IUt0TUQY1Oj-szlMjB_e3hzkVzUMFbcOGI';
 const sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
-
-const CATS={
-  TI:['Red','Hardware','Software','Accesos','Impresoras','UPS','Cámaras','Soporte SKILL'],
-  Mantenimiento:['Pintura','Tabla yeso','Albañilería','Diseño','Tapiz/Alfombra','Carpintería','Aire acondicionado y Refrigeración','Electricidad y Torre','Compras','Tapicería','Taller de Soldadura','Fontanería','Ascensores']
-};
+const CATS={TI:['Red','Hardware','Software','Accesos','Impresoras','UPS','Cámaras','Soporte SKILL'],Mantenimiento:['Pintura','Tabla yeso','Albañilería','Diseño','Tapiz/Alfombra','Carpintería','Aire acondicionado y Refrigeración','Electricidad y Torre','Compras','Tapicería','Taller de Soldadura','Fontanería','Ascensores']};
 const catIcon={Red:'ti-wifi',Hardware:'ti-device-desktop',Software:'ti-apps',Accesos:'ti-key',Impresoras:'ti-printer','UPS':'ti-battery-charging','Cámaras':'ti-camera','Soporte SKILL':'ti-school','Pintura':'ti-brush','Tabla yeso':'ti-wall','Albañilería':'ti-building-arch','Diseño':'ti-palette','Tapiz/Alfombra':'ti-layout-grid','Carpintería':'ti-hammer','Aire acondicionado y Refrigeración':'ti-wind','Electricidad y Torre':'ti-bolt','Compras':'ti-shopping-cart','Tapicería':'ti-armchair','Taller de Soldadura':'ti-flame','Fontanería':'ti-droplet','Ascensores':'ti-elevator'};
 const catColor={Red:'#185FA5',Hardware:'#185FA5',Software:'#185FA5',Accesos:'#185FA5',Impresoras:'#185FA5','UPS':'#185FA5','Cámaras':'#185FA5','Soporte SKILL':'#185FA5','Pintura':'#92700A','Tabla yeso':'#92700A','Albañilería':'#92700A','Diseño':'#92700A','Tapiz/Alfombra':'#92700A','Carpintería':'#7B4F2E','Aire acondicionado y Refrigeración':'#1A6B2A','Electricidad y Torre':'#CC5500','Compras':'#5A7A00','Tapicería':'#6B4FA8','Taller de Soldadura':'#555555','Fontanería':'#B71C1C','Ascensores':'#2E5FA8'};
 const catBg={Red:'#E6F1FB',Hardware:'#E6F1FB',Software:'#E6F1FB',Accesos:'#E6F1FB',Impresoras:'#E6F1FB','UPS':'#E6F1FB','Cámaras':'#E6F1FB','Soporte SKILL':'#E6F1FB','Pintura':'#FFF9C4','Tabla yeso':'#FFF9C4','Albañilería':'#FFF9C4','Diseño':'#FFF9C4','Tapiz/Alfombra':'#FFF9C4','Carpintería':'#F3E5D8','Aire acondicionado y Refrigeración':'#E8F5E9','Electricidad y Torre':'#FFF0E6','Compras':'#F4F9E4','Tapicería':'#F0EAF9','Taller de Soldadura':'#F0F0F0','Fontanería':'#FFEBEE','Ascensores':'#E8EEF9'};
 const statClass={Abierto:'b-abierto','En proceso':'b-en-proceso',Resuelto:'b-resuelto',Cerrado:'b-cerrado'};
 const prioClass={Alta:'prio-alta',Media:'prio-media',Baja:'prio-baja'};
 const prioIcon={Alta:'ti-arrow-up',Media:'ti-minus',Baja:'ti-arrow-down'};
-
 let allTickets=[],currentId=null,nextNum=1,currentUser=null,userRole=null,userDept=null,deptFilter='todos';
-let charts={};
-let reportFilters={dept:'',hotel:'',estado:'',prio:'',desde:'',hasta:''};
+let charts={},reportFilters={dept:'',hotel:'',estado:'',prio:'',desde:'',hasta:''};
 
 function pad(n){return 'TK-'+String(n).padStart(3,'0')}
 function today(){return new Date().toISOString().slice(0,10)}
+function nowTime(){return new Date().toTimeString().slice(0,8)}
 function fmt(d){if(!d)return '—';const[y,m,dy]=d.split('-');return dy+'/'+m+'/'+y}
+function fmtTime(t){return t?t.slice(0,5):''}
 function initials(n){return(n||'?').split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase()}
 function isAdmin(){return userRole==='superadmin'||userRole==='admin'}
 
@@ -507,8 +492,16 @@ async function createTicket(){
   const nombre=currentUser.user_metadata?.full_name||currentUser.email;
   const codigo=pad(nextNum);
   const dept=document.getElementById('n-dept').value;
-  const now=new Date();const horaInicio=now.toTimeString().slice(0,8);
-  const{error}=await sb.from('tickets').insert([{codigo,titulo,descripcion:document.getElementById('n-desc').value.trim()||'Sin descripción adicional.',categoria:document.getElementById('n-cat').value,prioridad:document.getElementById('n-prio').value,estado:'Abierto',solicitante:nombre,fecha:today(),user_id:currentUser.id,user_email:currentUser.email,departamento:dept,hotel:hotel,hora_inicio:horaInicio}]);
+  const{error}=await sb.from('tickets').insert([{
+    codigo,titulo,
+    descripcion:document.getElementById('n-desc').value.trim()||'Sin descripción adicional.',
+    categoria:document.getElementById('n-cat').value,
+    prioridad:document.getElementById('n-prio').value,
+    estado:'Abierto',solicitante:nombre,fecha:today(),
+    hora_inicio:nowTime(),
+    user_id:currentUser.id,user_email:currentUser.email,
+    departamento:dept,hotel:hotel
+  }]);
   if(error){showToast('Error: '+error.message,true);btn.disabled=false;btn.textContent='Enviar solicitud';return;}
   nextNum++;closeNew();await loadTickets();showToast('Solicitud '+codigo+' enviada correctamente');
 }
@@ -521,7 +514,16 @@ function openDet(id){
   document.getElementById('d-body').textContent=t.descripcion||'Sin descripción.';
   const deptBadge=t.departamento==='TI'?'<span class="badge b-ti">TI</span>':'<span class="badge b-mant">Mantenimiento</span>';
   document.getElementById('d-badges').innerHTML='<span class="badge '+(statClass[t.estado]||'b-abierto')+'">'+t.estado+'</span>'+deptBadge+catBadge(t.categoria)+'<span class="prio '+prioClass[t.prioridad]+'" style="font-size:12px;display:flex;align-items:center;gap:3px"><i class="ti '+prioIcon[t.prioridad]+'"></i>Prioridad '+t.prioridad+'</span>';
-  document.getElementById('d-info').innerHTML='<div class="di"><div class="di-label">Solicitante</div><div class="di-val">'+(t.solicitante||'—')+'</div></div><div class="di"><div class="di-label">Correo</div><div class="di-val">'+(t.user_email||'—')+'</div></div><div class="di"><div class="di-label">Hotel</div><div class="di-val">'+(t.hotel||'—')+'</div></div><div class="di"><div class="di-label">Inicio</div><div class="di-val">\'+fmt(t.fecha)+(t.hora_inicio?\' \'+t.hora_inicio.slice(0,5):\'\')+\'</div></div>\'+(t.fecha_fin?\'<div class="di"><div class="di-label">Cierre</div><div class="di-val">\'+fmt(t.fecha_fin)+(t.hora_fin?\' \'+t.hora_fin.slice(0,5):\'\')+\'</div></div>\':\'\');
+  
+  let infoHTML = '<div class="di"><div class="di-label">Solicitante</div><div class="di-val">'+(t.solicitante||'—')+'</div></div>'
+    +'<div class="di"><div class="di-label">Correo</div><div class="di-val">'+(t.user_email||'—')+'</div></div>'
+    +'<div class="di"><div class="di-label">Hotel</div><div class="di-val">'+(t.hotel||'—')+'</div></div>'
+    +'<div class="di"><div class="di-label">Inicio</div><div class="di-val">'+fmt(t.fecha)+(t.hora_inicio?' '+fmtTime(t.hora_inicio):'')+'</div></div>';
+  if(t.fecha_fin){
+    infoHTML += '<div class="di"><div class="di-label">Cierre</div><div class="di-val">'+fmt(t.fecha_fin)+(t.hora_fin?' '+fmtTime(t.hora_fin):'')+'</div></div>';
+  }
+  document.getElementById('d-info').innerHTML=infoHTML;
+
   if(isAdmin()){
     document.getElementById('obs-wrap').style.display='block';
     document.getElementById('obs-view').style.display='none';
@@ -548,9 +550,8 @@ function closeDet(){document.getElementById('modal-det').classList.remove('open'
 async function setStatus(est){
   const updateData={estado:est};
   if(est==='Cerrado'){
-    const now=new Date();
     updateData.fecha_fin=today();
-    updateData.hora_fin=now.toTimeString().slice(0,8);
+    updateData.hora_fin=nowTime();
   }
   const{error}=await sb.from('tickets').update(updateData).eq('id',currentId);
   if(error){showToast('Error: '+error.message,true);return;}
@@ -583,7 +584,6 @@ async function deleteTicket(){
   closeDet();await loadTickets();showToast('Solicitud '+codigo+' eliminada');
 }
 
-// REPORTES
 function getReportTickets(){
   return allTickets.filter(t=>{
     if(reportFilters.dept&&t.departamento!==reportFilters.dept)return false;
@@ -597,14 +597,7 @@ function getReportTickets(){
 }
 
 function applyReportFilter(){
-  reportFilters={
-    dept:document.getElementById('rf-dept').value,
-    hotel:document.getElementById('rf-hotel').value,
-    estado:document.getElementById('rf-estado').value,
-    prio:document.getElementById('rf-prio').value,
-    desde:document.getElementById('rf-desde').value,
-    hasta:document.getElementById('rf-hasta').value
-  };
+  reportFilters={dept:document.getElementById('rf-dept').value,hotel:document.getElementById('rf-hotel').value,estado:document.getElementById('rf-estado').value,prio:document.getElementById('rf-prio').value,desde:document.getElementById('rf-desde').value,hasta:document.getElementById('rf-hasta').value};
   renderReports();
 }
 
@@ -649,7 +642,7 @@ function exportCSV(){
   const tickets=getReportTickets();
   if(!tickets.length){showToast('No hay tickets para exportar',true);return;}
   const headers=['Código','Título','Descripción','Departamento','Hotel','Categoría','Estado','Prioridad','Solicitante','Correo','Fecha Inicio','Hora Inicio','Fecha Cierre','Hora Cierre','Observación'];
-  const rows=tickets.map(t=>[t.codigo,t.titulo,t.descripcion,t.departamento,t.hotel,t.categoria,t.estado,t.prioridad,t.solicitante,t.user_email,t.fecha,t.hora_inicio?t.hora_inicio.slice(0,5):'',t.fecha_fin||'',t.hora_fin?t.hora_fin.slice(0,5):'',t.observacion]);
+  const rows=tickets.map(t=>[t.codigo,t.titulo,t.descripcion,t.departamento,t.hotel,t.categoria,t.estado,t.prioridad,t.solicitante,t.user_email,t.fecha,fmtTime(t.hora_inicio),t.fecha_fin||'',fmtTime(t.hora_fin),t.observacion||'']);
   const esc=v=>'"'+String(v==null?'':v).replace(/"/g,'""')+'"';
   const csv='\uFEFF'+[headers,...rows].map(r=>r.map(esc).join(',')).join('\r\n');
   const blob=new Blob([csv],{type:'text/csv;charset=utf-8'});
