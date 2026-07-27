@@ -507,7 +507,8 @@ async function createTicket(){
   const nombre=currentUser.user_metadata?.full_name||currentUser.email;
   const codigo=pad(nextNum);
   const dept=document.getElementById('n-dept').value;
-  const{error}=await sb.from('tickets').insert([{codigo,titulo,descripcion:document.getElementById('n-desc').value.trim()||'Sin descripción adicional.',categoria:document.getElementById('n-cat').value,prioridad:document.getElementById('n-prio').value,estado:'Abierto',solicitante:nombre,fecha:today(),user_id:currentUser.id,user_email:currentUser.email,departamento:dept,hotel:hotel}]);
+  const now=new Date();const horaInicio=now.toTimeString().slice(0,8);
+  const{error}=await sb.from('tickets').insert([{codigo,titulo,descripcion:document.getElementById('n-desc').value.trim()||'Sin descripción adicional.',categoria:document.getElementById('n-cat').value,prioridad:document.getElementById('n-prio').value,estado:'Abierto',solicitante:nombre,fecha:today(),user_id:currentUser.id,user_email:currentUser.email,departamento:dept,hotel:hotel,hora_inicio:horaInicio}]);
   if(error){showToast('Error: '+error.message,true);btn.disabled=false;btn.textContent='Enviar solicitud';return;}
   nextNum++;closeNew();await loadTickets();showToast('Solicitud '+codigo+' enviada correctamente');
 }
@@ -520,7 +521,7 @@ function openDet(id){
   document.getElementById('d-body').textContent=t.descripcion||'Sin descripción.';
   const deptBadge=t.departamento==='TI'?'<span class="badge b-ti">TI</span>':'<span class="badge b-mant">Mantenimiento</span>';
   document.getElementById('d-badges').innerHTML='<span class="badge '+(statClass[t.estado]||'b-abierto')+'">'+t.estado+'</span>'+deptBadge+catBadge(t.categoria)+'<span class="prio '+prioClass[t.prioridad]+'" style="font-size:12px;display:flex;align-items:center;gap:3px"><i class="ti '+prioIcon[t.prioridad]+'"></i>Prioridad '+t.prioridad+'</span>';
-  document.getElementById('d-info').innerHTML='<div class="di"><div class="di-label">Solicitante</div><div class="di-val">'+(t.solicitante||'—')+'</div></div><div class="di"><div class="di-label">Correo</div><div class="di-val">'+(t.user_email||'—')+'</div></div><div class="di"><div class="di-label">Hotel</div><div class="di-val">'+(t.hotel||'—')+'</div></div><div class="di"><div class="di-label">Fecha</div><div class="di-val">'+fmt(t.fecha)+'</div></div>';
+  document.getElementById('d-info').innerHTML='<div class="di"><div class="di-label">Solicitante</div><div class="di-val">'+(t.solicitante||'—')+'</div></div><div class="di"><div class="di-label">Correo</div><div class="di-val">'+(t.user_email||'—')+'</div></div><div class="di"><div class="di-label">Hotel</div><div class="di-val">'+(t.hotel||'—')+'</div></div><div class="di"><div class="di-label">Inicio</div><div class="di-val">\'+fmt(t.fecha)+(t.hora_inicio?\' \'+t.hora_inicio.slice(0,5):\'\')+\'</div></div>\'+(t.fecha_fin?\'<div class="di"><div class="di-label">Cierre</div><div class="di-val">\'+fmt(t.fecha_fin)+(t.hora_fin?\' \'+t.hora_fin.slice(0,5):\'\')+\'</div></div>\':\'\');
   if(isAdmin()){
     document.getElementById('obs-wrap').style.display='block';
     document.getElementById('obs-view').style.display='none';
@@ -545,7 +546,13 @@ function openDet(id){
 function closeDet(){document.getElementById('modal-det').classList.remove('open');currentId=null;}
 
 async function setStatus(est){
-  const{error}=await sb.from('tickets').update({estado:est}).eq('id',currentId);
+  const updateData={estado:est};
+  if(est==='Cerrado'){
+    const now=new Date();
+    updateData.fecha_fin=today();
+    updateData.hora_fin=now.toTimeString().slice(0,8);
+  }
+  const{error}=await sb.from('tickets').update(updateData).eq('id',currentId);
   if(error){showToast('Error: '+error.message,true);return;}
   if(est==='Resuelto'){
     const t=allTickets.find(x=>x.id===currentId);
@@ -641,8 +648,8 @@ function renderReports(){
 function exportCSV(){
   const tickets=getReportTickets();
   if(!tickets.length){showToast('No hay tickets para exportar',true);return;}
-  const headers=['Código','Título','Descripción','Departamento','Hotel','Categoría','Estado','Prioridad','Solicitante','Correo','Fecha','Observación'];
-  const rows=tickets.map(t=>[t.codigo,t.titulo,t.descripcion,t.departamento,t.hotel,t.categoria,t.estado,t.prioridad,t.solicitante,t.user_email,t.fecha,t.observacion]);
+  const headers=['Código','Título','Descripción','Departamento','Hotel','Categoría','Estado','Prioridad','Solicitante','Correo','Fecha Inicio','Hora Inicio','Fecha Cierre','Hora Cierre','Observación'];
+  const rows=tickets.map(t=>[t.codigo,t.titulo,t.descripcion,t.departamento,t.hotel,t.categoria,t.estado,t.prioridad,t.solicitante,t.user_email,t.fecha,t.hora_inicio?t.hora_inicio.slice(0,5):'',t.fecha_fin||'',t.hora_fin?t.hora_fin.slice(0,5):'',t.observacion]);
   const esc=v=>'"'+String(v==null?'':v).replace(/"/g,'""')+'"';
   const csv='\uFEFF'+[headers,...rows].map(r=>r.map(esc).join(',')).join('\r\n');
   const blob=new Blob([csv],{type:'text/csv;charset=utf-8'});
