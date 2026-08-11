@@ -70,6 +70,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .toolbar{display:flex;gap:8px;margin-bottom:1rem;flex-wrap:wrap}
 .toolbar input,.toolbar select{font-size:13px;padding:6px 10px;border-radius:var(--radius);border:.5px solid var(--border2);background:var(--bg);color:var(--text);height:34px;outline:none}
 .toolbar input{flex:1;min-width:180px}
+.toolbar input[type=date]{flex:none;min-width:auto}
 .ticket-list{display:flex;flex-direction:column;gap:8px}
 .ticket{background:var(--bg);border:.5px solid var(--border);border-radius:var(--radius-lg);padding:.875rem 1rem;cursor:pointer;transition:border-color .15s}
 .ticket:hover{border-color:var(--border2)}
@@ -95,6 +96,12 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .empty{text-align:center;padding:3rem 1rem;color:var(--text3);font-size:13px;background:var(--bg);border:.5px solid var(--border);border-radius:var(--radius-lg)}
 .empty i{font-size:28px;display:block;margin:0 auto 8px;opacity:.5}
 .loading{text-align:center;padding:2rem;color:var(--text3);font-size:13px}
+.pagination{display:flex;align-items:center;justify-content:center;gap:6px;margin-top:1rem;flex-wrap:wrap}
+.page-btn{background:var(--bg);border:.5px solid var(--border2);border-radius:var(--radius);padding:0 12px;height:32px;font-size:13px;cursor:pointer;color:var(--text2);min-width:32px}
+.page-btn:hover{background:var(--bg2)}
+.page-btn.active{background:var(--text);color:var(--bg);border-color:var(--text);font-weight:500}
+.page-btn:disabled{opacity:.4;cursor:not-allowed}
+.page-info{font-size:12px;color:var(--text3);margin:0 4px}
 .modal-wrap{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);align-items:center;justify-content:center;padding:1rem;z-index:100}
 .modal-wrap.open{display:flex}
 .modal{background:var(--bg);border-radius:var(--radius-lg);border:.5px solid var(--border2);width:100%;max-width:480px;padding:1.375rem;max-height:90vh;overflow-y:auto}
@@ -120,6 +127,12 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .status-btn.active{font-weight:500;border-color:var(--text);color:var(--text)}
 .status-btn:disabled{opacity:.35;cursor:not-allowed;border-style:dashed}
 .section-label{font-size:12px;color:var(--text3);margin-bottom:6px}
+.confirm-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);align-items:center;justify-content:center;z-index:300;padding:1rem}
+.confirm-overlay.open{display:flex}
+.confirm-box{background:var(--bg);border-radius:var(--radius-lg);border:.5px solid var(--border2);width:100%;max-width:360px;padding:1.5rem}
+.confirm-box h3{font-size:16px;font-weight:500;margin-bottom:.5rem}
+.confirm-box p{font-size:13px;color:var(--text2);margin-bottom:1.25rem;line-height:1.5}
+.confirm-btns{display:flex;gap:8px;justify-content:flex-end}
 .toast{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);background:var(--text);color:var(--bg);padding:10px 20px;border-radius:var(--radius);font-size:13px;display:none;align-items:center;gap:8px;z-index:200;white-space:nowrap;box-shadow:0 4px 12px rgba(0,0,0,.15)}
 .toast.show{display:flex}.toast.error{background:var(--red-bg);color:var(--red-text)}
 .reports-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem}
@@ -176,6 +189,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     </div>
   </div>
 </div>
+
 <div class="app-wrap" id="app-wrap">
   <div class="topbar">
     <div class="topbar-left">
@@ -221,9 +235,12 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
           <select id="f-cat" onchange="render()"><option value="">Todas las categorías</option></select>
           <select id="f-hotel" onchange="render()"><option value="">Todos los hoteles</option><option>Hotel Plaza Juan Carlos</option><option>Hotel Plaza San Martín</option><option>Hotel Plaza del Libertador</option><option>Hotel Plaza del General</option></select>
           <select id="f-prio" onchange="render()"><option value="">Todas las prioridades</option><option>Alta</option><option>Media</option><option>Baja</option></select>
+          <input type="date" id="f-desde" onchange="render()" title="Desde" style="font-size:13px;padding:6px 10px;border-radius:var(--radius);border:.5px solid var(--border2);background:var(--bg);color:var(--text);height:34px;outline:none">
+          <input type="date" id="f-hasta" onchange="render()" title="Hasta" style="font-size:13px;padding:6px 10px;border-radius:var(--radius);border:.5px solid var(--border2);background:var(--bg);color:var(--text);height:34px;outline:none">
         </div>
       </div>
       <div class="ticket-list" id="list"><div class="loading"><i class="ti ti-loader" style="font-size:20px;display:block;margin:0 auto 8px"></i>Cargando…</div></div>
+      <div class="pagination" id="pagination" style="display:none"></div>
     </div>
     <div id="view-reportes" style="display:none">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;flex-wrap:wrap;gap:.75rem">
@@ -260,7 +277,20 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   </div>
   <div class="footer">Desarrollado por <span>Josué Aguilar</span> · Técnico TI · Distrito Hotelero Plaza San Martín · 2026</div>
 </div>
+
 <div class="toast" id="toast"><i class="ti ti-check" id="toast-icon"></i><span id="toast-msg"></span></div>
+
+<div class="confirm-overlay" id="confirm-overlay">
+  <div class="confirm-box">
+    <h3 id="confirm-title">¿Estás seguro?</h3>
+    <p id="confirm-msg">Esta acción no se puede deshacer.</p>
+    <div class="confirm-btns">
+      <button class="btn-cancel" onclick="confirmResolve(false)">Cancelar</button>
+      <button class="btn-danger" onclick="confirmResolve(true)">Eliminar</button>
+    </div>
+  </div>
+</div>
+
 <div class="modal-wrap" id="modal-new">
   <div class="modal">
     <div class="modal-head"><h2><i class="ti ti-plus" style="margin-right:5px"></i>Nueva solicitud</h2><button class="close-btn" onclick="closeNew()">×</button></div>
@@ -275,6 +305,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     <div class="modal-btns"><button class="btn-cancel" onclick="closeNew()">Cancelar</button><button class="btn-submit" id="btn-create" onclick="createTicket()">Enviar solicitud</button></div>
   </div>
 </div>
+
 <div class="modal-wrap" id="modal-det">
   <div class="modal">
     <div class="modal-head"><div><div style="font-size:11px;color:var(--text3)" id="d-id"></div><h2 id="d-title" style="font-size:15px;margin-top:2px"></h2></div><button class="close-btn" onclick="closeDet()">×</button></div>
@@ -294,19 +325,25 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     <div class="modal-btns"><button class="btn-danger" id="btn-delete" style="display:none" onclick="deleteTicket()"><i class="ti ti-trash" style="margin-right:3px"></i>Eliminar</button><button class="btn-cancel" onclick="closeDet()">Cerrar</button></div>
   </div>
 </div>
+
 <script>
 const SUPABASE_URL='https://afrdmrumamvmldmjddrc.supabase.co';
 const SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFmcmRtcnVtYW12bWxkbWpkZHJjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM2ODU1MDUsImV4cCI6MjA5OTI2MTUwNX0.0MZLA-_G_IUt0TUQY1Oj-szlMjB_e3hzkVzUMFbcOGI';
 const sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
-const CATS={TI:['Red','Hardware','Software','Accesos','Impresoras','UPS','Cámaras','Soporte SKILL'],Mantenimiento:['Pintura','Tabla yeso','Albañilería','Diseño','Tapiz/Alfombra','Carpintería','Aire acondicionado y Refrigeración','Electricidad y Torre','Compras','Tapicería','Taller de Soldadura','Fontanería','Ascensores']};
-const catIcon={Red:'ti-wifi',Hardware:'ti-device-desktop',Software:'ti-apps',Accesos:'ti-key',Impresoras:'ti-printer','UPS':'ti-battery-charging','Cámaras':'ti-camera','Soporte SKILL':'ti-school','Pintura':'ti-brush','Tabla yeso':'ti-wall','Albañilería':'ti-building-arch','Diseño':'ti-palette','Tapiz/Alfombra':'ti-layout-grid','Carpintería':'ti-hammer','Aire acondicionado y Refrigeración':'ti-wind','Electricidad y Torre':'ti-bolt','Compras':'ti-shopping-cart','Tapicería':'ti-armchair','Taller de Soldadura':'ti-flame','Fontanería':'ti-droplet','Ascensores':'ti-elevator'};
-const catColor={Red:'#185FA5',Hardware:'#185FA5',Software:'#185FA5',Accesos:'#185FA5',Impresoras:'#185FA5','UPS':'#185FA5','Cámaras':'#185FA5','Soporte SKILL':'#185FA5','Pintura':'#92700A','Tabla yeso':'#92700A','Albañilería':'#92700A','Diseño':'#92700A','Tapiz/Alfombra':'#92700A','Carpintería':'#7B4F2E','Aire acondicionado y Refrigeración':'#1A6B2A','Electricidad y Torre':'#CC5500','Compras':'#5A7A00','Tapicería':'#6B4FA8','Taller de Soldadura':'#555555','Fontanería':'#B71C1C','Ascensores':'#2E5FA8'};
-const catBg={Red:'#E6F1FB',Hardware:'#E6F1FB',Software:'#E6F1FB',Accesos:'#E6F1FB',Impresoras:'#E6F1FB','UPS':'#E6F1FB','Cámaras':'#E6F1FB','Soporte SKILL':'#E6F1FB','Pintura':'#FFF9C4','Tabla yeso':'#FFF9C4','Albañilería':'#FFF9C4','Diseño':'#FFF9C4','Tapiz/Alfombra':'#FFF9C4','Carpintería':'#F3E5D8','Aire acondicionado y Refrigeración':'#E8F5E9','Electricidad y Torre':'#FFF0E6','Compras':'#F4F9E4','Tapicería':'#F0EAF9','Taller de Soldadura':'#F0F0F0','Fontanería':'#FFEBEE','Ascensores':'#E8EEF9'};
+
+const CATS={TI:['Red','Hardware','Software','Accesos','Impresoras','UPS','Cámaras','Soporte SKILL','Habitaciones'],Mantenimiento:['Pintura','Tabla yeso','Albañilería','Diseño','Tapiz/Alfombra','Carpintería','Aire acondicionado y Refrigeración','Electricidad y Torre','Compras','Tapicería','Taller de Soldadura','Fontanería','Ascensores']};
+const catIcon={Red:'ti-wifi',Hardware:'ti-device-desktop',Software:'ti-apps',Accesos:'ti-key',Impresoras:'ti-printer','UPS':'ti-battery-charging','Cámaras':'ti-camera','Soporte SKILL':'ti-school','Habitaciones':'ti-bed','Pintura':'ti-brush','Tabla yeso':'ti-wall','Albañilería':'ti-building-arch','Diseño':'ti-palette','Tapiz/Alfombra':'ti-layout-grid','Carpintería':'ti-hammer','Aire acondicionado y Refrigeración':'ti-wind','Electricidad y Torre':'ti-bolt','Compras':'ti-shopping-cart','Tapicería':'ti-armchair','Taller de Soldadura':'ti-flame','Fontanería':'ti-droplet','Ascensores':'ti-elevator'};
+const catColor={Red:'#185FA5',Hardware:'#185FA5',Software:'#185FA5',Accesos:'#185FA5',Impresoras:'#185FA5','UPS':'#185FA5','Cámaras':'#185FA5','Soporte SKILL':'#185FA5','Habitaciones':'#185FA5','Pintura':'#92700A','Tabla yeso':'#92700A','Albañilería':'#92700A','Diseño':'#92700A','Tapiz/Alfombra':'#92700A','Carpintería':'#7B4F2E','Aire acondicionado y Refrigeración':'#1A6B2A','Electricidad y Torre':'#CC5500','Compras':'#5A7A00','Tapicería':'#6B4FA8','Taller de Soldadura':'#555555','Fontanería':'#B71C1C','Ascensores':'#2E5FA8'};
+const catBg={Red:'#E6F1FB',Hardware:'#E6F1FB',Software:'#E6F1FB',Accesos:'#E6F1FB',Impresoras:'#E6F1FB','UPS':'#E6F1FB','Cámaras':'#E6F1FB','Soporte SKILL':'#E6F1FB','Habitaciones':'#E6F1FB','Pintura':'#FFF9C4','Tabla yeso':'#FFF9C4','Albañilería':'#FFF9C4','Diseño':'#FFF9C4','Tapiz/Alfombra':'#FFF9C4','Carpintería':'#F3E5D8','Aire acondicionado y Refrigeración':'#E8F5E9','Electricidad y Torre':'#FFF0E6','Compras':'#F4F9E4','Tapicería':'#F0EAF9','Taller de Soldadura':'#F0F0F0','Fontanería':'#FFEBEE','Ascensores':'#E8EEF9'};
 const statClass={Abierto:'b-abierto','En proceso':'b-en-proceso',Resuelto:'b-resuelto',Cerrado:'b-cerrado'};
 const prioClass={Alta:'prio-alta',Media:'prio-media',Baja:'prio-baja'};
 const prioIcon={Alta:'ti-arrow-up',Media:'ti-minus',Baja:'ti-arrow-down'};
-let allTickets=[],currentId=null,nextNum=1,currentUser=null,userRole=null,userDept=null,deptFilter='todos';
+const ESTADO_ORDEN={Abierto:0,'En proceso':1,Resuelto:2,Cerrado:3};
+const PAGE_SIZE=15;
+
+let allTickets=[],currentId=null,nextNum=1,currentUser=null,userRole=null,userDept=null,deptFilter='todos',currentPage=1;
 let charts={},reportFilters={dept:'',hotel:'',estado:'',prio:'',desde:'',hasta:''};
+let confirmResolve=null;
 
 function pad(n){return 'TK-'+String(n).padStart(3,'0')}
 function today(){return new Date().toISOString().slice(0,10)}
@@ -315,6 +352,18 @@ function fmt(d){if(!d)return '—';const[y,m,dy]=d.split('-');return dy+'/'+m+'/
 function fmtTime(t){return t?t.slice(0,5):''}
 function initials(n){return(n||'?').split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase()}
 function isAdmin(){return userRole==='superadmin'||userRole==='admin'}
+
+function showConfirm(title,msg){
+  return new Promise(resolve=>{
+    document.getElementById('confirm-title').textContent=title;
+    document.getElementById('confirm-msg').textContent=msg;
+    document.getElementById('confirm-overlay').classList.add('open');
+    confirmResolve=(result)=>{
+      document.getElementById('confirm-overlay').classList.remove('open');
+      resolve(result);
+    };
+  });
+}
 
 function togglePass(inputId,eyeId){
   const input=document.getElementById(inputId);
@@ -399,7 +448,7 @@ function updateFilterCats(){
 }
 
 function setDeptFilter(dept){
-  deptFilter=dept;
+  deptFilter=dept;currentPage=1;
   ['todos','TI','Mantenimiento'].forEach(d=>{document.getElementById('tab-'+d).classList.toggle('active',d===dept);});
   updateFilterCats();render();
 }
@@ -425,26 +474,50 @@ async function loadTickets(){
   render();
 }
 
+function getSorted(list){
+  return [...list].sort((a,b)=>{
+    const oa=ESTADO_ORDEN[a.estado]??99;
+    const ob=ESTADO_ORDEN[b.estado]??99;
+    if(oa!==ob)return oa-ob;
+    return b.id-a.id;
+  });
+}
+
 function getFiltered(){
-  if(!isAdmin())return allTickets;
-  const q=document.getElementById('search').value.toLowerCase();
-  const est=document.getElementById('f-estado').value;
-  const cat=document.getElementById('f-cat').value;
-  const hotel=document.getElementById('f-hotel').value;
-  const prio=document.getElementById('f-prio').value;
-  return allTickets.filter(t=>{
+  const q=(document.getElementById('search')?.value||'').toLowerCase();
+  const est=document.getElementById('f-estado')?.value||'';
+  const cat=document.getElementById('f-cat')?.value||'';
+  const hotel=document.getElementById('f-hotel')?.value||'';
+  const prio=document.getElementById('f-prio')?.value||'';
+  const desde=document.getElementById('f-desde')?.value||'';
+  const hasta=document.getElementById('f-hasta')?.value||'';
+
+  const base=isAdmin()?allTickets:allTickets;
+  return getSorted(base.filter(t=>{
+    if(!isAdmin()&&t.user_id!==currentUser.id)return false;
     if(deptFilter!=='todos'&&t.departamento!==deptFilter)return false;
     if(q&&!t.titulo.toLowerCase().includes(q)&&!(t.descripcion||'').toLowerCase().includes(q))return false;
     if(est&&t.estado!==est)return false;
     if(cat&&t.categoria!==cat)return false;
     if(hotel&&t.hotel!==hotel)return false;
     if(prio&&t.prioridad!==prio)return false;
+    if(desde&&t.fecha<desde)return false;
+    if(hasta&&t.fecha>hasta)return false;
     return true;
-  });
+  }));
 }
 
 function catBadge(cat){
   return '<span class="badge" style="background:'+(catBg[cat]||'#f0efe9')+';color:'+(catColor[cat]||'#6b6a65')+'"><i class="ti '+(catIcon[cat]||'ti-help-circle')+'" style="margin-right:3px"></i>'+cat+'</span>';
+}
+
+function goPage(page){
+  const list=getFiltered();
+  const totalPages=Math.ceil(list.length/PAGE_SIZE);
+  if(page<1||page>totalPages)return;
+  currentPage=page;
+  render();
+  window.scrollTo({top:0,behavior:'smooth'});
 }
 
 function render(){
@@ -457,8 +530,37 @@ function render(){
   }
   const list=getFiltered();
   const el=document.getElementById('list');
-  if(!list.length){el.innerHTML='<div class="empty"><i class="ti ti-ticket-off"></i>No hay solicitudes que mostrar.<br><br><button onclick="openNew()" style="margin-top:8px;background:var(--text);color:var(--bg);border:none;border-radius:8px;padding:8px 16px;cursor:pointer;font-size:13px">Crear primera solicitud</button></div>';return;}
-  el.innerHTML=list.map(t=>{
+  const paginationEl=document.getElementById('pagination');
+
+  if(!list.length){
+    el.innerHTML='<div class="empty"><i class="ti ti-ticket-off"></i>No hay solicitudes que mostrar.<br><br><button onclick="openNew()" style="margin-top:8px;background:var(--text);color:var(--bg);border:none;border-radius:8px;padding:8px 16px;cursor:pointer;font-size:13px">Crear primera solicitud</button></div>';
+    paginationEl.style.display='none';
+    return;
+  }
+
+  const totalPages=Math.ceil(list.length/PAGE_SIZE);
+  if(currentPage>totalPages)currentPage=1;
+  const start=(currentPage-1)*PAGE_SIZE;
+  const pageList=list.slice(start,start+PAGE_SIZE);
+
+  if(list.length>PAGE_SIZE){
+    paginationEl.style.display='flex';
+    let html='<button class="page-btn" onclick="goPage('+(currentPage-1)+')" '+(currentPage===1?'disabled':'')+'>‹</button>';
+    for(let i=1;i<=totalPages;i++){
+      if(i===1||i===totalPages||Math.abs(i-currentPage)<=1){
+        html+='<button class="page-btn '+(i===currentPage?'active':'')+'" onclick="goPage('+i+')">'+i+'</button>';
+      }else if(Math.abs(i-currentPage)===2){
+        html+='<span class="page-info">…</span>';
+      }
+    }
+    html+='<button class="page-btn" onclick="goPage('+(currentPage+1)+')" '+(currentPage===totalPages?'disabled':'')+'>›</button>';
+    html+='<span class="page-info">'+list.length+' tickets · Página '+currentPage+' de '+totalPages+'</span>';
+    paginationEl.innerHTML=html;
+  }else{
+    paginationEl.style.display='none';
+  }
+
+  el.innerHTML=pageList.map(t=>{
     const deptBadge=t.departamento==='TI'?'<span class="badge b-ti">TI</span>':'<span class="badge b-mant">Mantenimiento</span>';
     return '<div class="ticket" onclick="openDet('+t.id+')" role="button" tabindex="0">'
       +'<div class="ticket-top"><div class="ticket-title">'+t.titulo+'</div><div class="ticket-id">'+t.codigo+'</div></div>'
@@ -514,16 +616,12 @@ function openDet(id){
   document.getElementById('d-body').textContent=t.descripcion||'Sin descripción.';
   const deptBadge=t.departamento==='TI'?'<span class="badge b-ti">TI</span>':'<span class="badge b-mant">Mantenimiento</span>';
   document.getElementById('d-badges').innerHTML='<span class="badge '+(statClass[t.estado]||'b-abierto')+'">'+t.estado+'</span>'+deptBadge+catBadge(t.categoria)+'<span class="prio '+prioClass[t.prioridad]+'" style="font-size:12px;display:flex;align-items:center;gap:3px"><i class="ti '+prioIcon[t.prioridad]+'"></i>Prioridad '+t.prioridad+'</span>';
-  
-  let infoHTML = '<div class="di"><div class="di-label">Solicitante</div><div class="di-val">'+(t.solicitante||'—')+'</div></div>'
+  let infoHTML='<div class="di"><div class="di-label">Solicitante</div><div class="di-val">'+(t.solicitante||'—')+'</div></div>'
     +'<div class="di"><div class="di-label">Correo</div><div class="di-val">'+(t.user_email||'—')+'</div></div>'
     +'<div class="di"><div class="di-label">Hotel</div><div class="di-val">'+(t.hotel||'—')+'</div></div>'
     +'<div class="di"><div class="di-label">Inicio</div><div class="di-val">'+fmt(t.fecha)+(t.hora_inicio?' '+fmtTime(t.hora_inicio):'')+'</div></div>';
-  if(t.fecha_fin){
-    infoHTML += '<div class="di"><div class="di-label">Cierre</div><div class="di-val">'+fmt(t.fecha_fin)+(t.hora_fin?' '+fmtTime(t.hora_fin):'')+'</div></div>';
-  }
+  if(t.fecha_fin){infoHTML+='<div class="di"><div class="di-label">Cierre</div><div class="di-val">'+fmt(t.fecha_fin)+(t.hora_fin?' '+fmtTime(t.hora_fin):'')+'</div></div>';}
   document.getElementById('d-info').innerHTML=infoHTML;
-
   if(isAdmin()){
     document.getElementById('obs-wrap').style.display='block';
     document.getElementById('obs-view').style.display='none';
@@ -549,10 +647,7 @@ function closeDet(){document.getElementById('modal-det').classList.remove('open'
 
 async function setStatus(est){
   const updateData={estado:est};
-  if(est==='Cerrado'){
-    updateData.fecha_fin=today();
-    updateData.hora_fin=nowTime();
-  }
+  if(est==='Cerrado'){updateData.fecha_fin=today();updateData.hora_fin=nowTime();}
   const{error}=await sb.from('tickets').update(updateData).eq('id',currentId);
   if(error){showToast('Error: '+error.message,true);return;}
   if(est==='Resuelto'){
@@ -577,7 +672,8 @@ async function saveObs(){
 }
 
 async function deleteTicket(){
-  if(!confirm('¿Eliminar esta solicitud?'))return;
+  const ok=await showConfirm('¿Eliminar esta solicitud?','Esta acción no se puede deshacer. El ticket será eliminado permanentemente.');
+  if(!ok)return;
   const codigo=allTickets.find(x=>x.id===currentId)?.codigo;
   const{error}=await sb.from('tickets').delete().eq('id',currentId);
   if(error){showToast('Error: '+error.message,true);return;}
@@ -611,11 +707,7 @@ function makeChart(id,type,labels,data,colors,bgColors){
   if(charts[id]){charts[id].destroy();delete charts[id];}
   const canvas=document.getElementById(id);
   if(!canvas)return;
-  charts[id]=new Chart(canvas.getContext('2d'),{
-    type,
-    data:{labels,datasets:[{data,backgroundColor:bgColors||colors,borderColor:type==='doughnut'?'transparent':colors,borderWidth:0,borderRadius:type==='bar'?4:0}]},
-    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:type==='bar'?'bottom':'right',labels:{font:{size:10},boxWidth:10,padding:8}}},scales:type==='bar'?{y:{beginAtZero:true,ticks:{stepSize:1,font:{size:10}},grid:{color:'rgba(0,0,0,0.04)'}},x:{ticks:{font:{size:9}},grid:{display:false}}}:{}}
-  });
+  charts[id]=new Chart(canvas.getContext('2d'),{type,data:{labels,datasets:[{data,backgroundColor:bgColors||colors,borderColor:type==='doughnut'?'transparent':colors,borderWidth:0,borderRadius:type==='bar'?4:0}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:type==='bar'?'bottom':'right',labels:{font:{size:10},boxWidth:10,padding:8}}},scales:type==='bar'?{y:{beginAtZero:true,ticks:{stepSize:1,font:{size:10}},grid:{color:'rgba(0,0,0,0.04)'}},x:{ticks:{font:{size:9}},grid:{display:false}}}:{}}});
 }
 
 function renderReports(){
@@ -662,7 +754,7 @@ function showToast(msg,isError=false){
   setTimeout(()=>el.classList.remove('show'),4000);
 }
 
-document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeNew();closeDet();}});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeNew();closeDet();document.getElementById('confirm-overlay').classList.remove('open');}});
 sb.auth.getSession().then(({data:{session}})=>{if(session)initApp(session.user);});
 sb.auth.onAuthStateChange((_,session)=>{if(!session&&currentUser)doLogout();});
 </script>
