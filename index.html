@@ -323,6 +323,17 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       <div id="obs-content" style="font-size:13px;color:var(--text2);line-height:1.6;padding:.875rem;background:var(--bg2);border-radius:var(--radius)"></div>
     </div>
     <div id="admin-actions" style="display:none"><div class="section-label">Cambiar estado</div><div class="status-row" id="d-status"></div></div>
+    <div id="edit-cat-wrap" style="display:none;margin-bottom:1rem">
+      <div class="section-label">Cambiar categoría / departamento</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:flex-end;margin-top:4px">
+        <select id="edit-dept" onchange="updateEditCats()" style="font-size:13px;padding:6px 10px;border:.5px solid var(--border2);border-radius:var(--radius);background:var(--bg);color:var(--text);height:34px;outline:none">
+          <option value="TI">TI</option>
+          <option value="Mantenimiento">Mantenimiento</option>
+        </select>
+        <select id="edit-cat" style="font-size:13px;padding:6px 10px;border:.5px solid var(--border2);border-radius:var(--radius);background:var(--bg);color:var(--text);height:34px;outline:none;flex:1"></select>
+        <button onclick="saveCategory()" style="background:var(--text);color:var(--bg);border:none;border-radius:var(--radius);padding:0 14px;height:34px;font-size:12px;cursor:pointer;font-weight:500">Guardar</button>
+      </div>
+    </div>
     <div class="modal-btns"><button class="btn-danger" id="btn-delete" style="display:none" onclick="deleteTicket()"><i class="ti ti-trash" style="margin-right:3px"></i>Eliminar</button><button class="btn-cancel" onclick="closeDet()">Cerrar</button></div>
   </div>
 </div>
@@ -650,6 +661,15 @@ function openDet(id){
     else{document.getElementById('obs-view').style.display='none';}
   }
   document.getElementById('admin-actions').style.display=isAdmin()?'block':'none';
+  document.getElementById('edit-cat-wrap').style.display=isAdmin()?'block':'none';
+  if(isAdmin()){
+    const deptSel=document.getElementById('edit-dept');
+    deptSel.value=t.departamento||'TI';
+    updateEditCats();
+    const catSel=document.getElementById('edit-cat');
+    const opt=[...catSel.options].find(o=>o.value===t.categoria);
+    if(opt)opt.selected=true;
+  }
   document.getElementById('btn-delete').style.display=isAdmin()?'inline-flex':'none';
   if(isAdmin()){
     const estados=['Abierto','En proceso','Resuelto','Cerrado'];
@@ -762,6 +782,26 @@ function exportCSV(){
   document.body.appendChild(a);a.click();
   setTimeout(()=>{document.body.removeChild(a);URL.revokeObjectURL(url);},100);
   showToast('Exportado — '+tickets.length+' tickets');
+}
+
+function updateEditCats(){
+  const dept=document.getElementById('edit-dept').value;
+  const sel=document.getElementById('edit-cat');
+  sel.innerHTML=CATS[dept].map(c=>'<option>'+c+'</option>').join('');
+  // Set current cat if same dept
+  const t=allTickets.find(x=>x.id===currentId);
+  if(t&&t.departamento===dept){
+    const opt=[...sel.options].find(o=>o.value===t.categoria);
+    if(opt)opt.selected=true;
+  }
+}
+
+async function saveCategory(){
+  const dept=document.getElementById('edit-dept').value;
+  const cat=document.getElementById('edit-cat').value;
+  const{error}=await sb.from('tickets').update({departamento:dept,categoria:cat}).eq('id',currentId);
+  if(error){showToast('Error: '+error.message,true);return;}
+  closeDet();await loadTickets();showToast('Categoría actualizada correctamente');
 }
 
 function showToast(msg,isError=false){
