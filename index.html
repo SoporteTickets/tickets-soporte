@@ -502,7 +502,11 @@ function getFiltered(){
     if(!isAdmin()&&t.user_id!==currentUser.id)return false;
     if(deptFilter==='Proyectos'){
       if(t.departamento!=='Mantenimiento'||!PROYECTOS_CATS.includes(t.categoria))return false;
-    } else if(deptFilter!=='todos'&&t.departamento!==deptFilter)return false;
+    } else if(deptFilter==='Mantenimiento'){
+      if(t.departamento!=='Mantenimiento'||PROYECTOS_CATS.includes(t.categoria))return false;
+    } else if(deptFilter==='todos'){
+      // Mostrar todos
+    } else if(t.departamento!==deptFilter)return false;
     if(q&&!t.titulo.toLowerCase().includes(q)&&!(t.descripcion||'').toLowerCase().includes(q))return false;
     if(est&&t.estado!==est)return false;
     if(cat&&t.categoria!==cat)return false;
@@ -532,6 +536,8 @@ function render(){
     let src;
     if(deptFilter==='Proyectos'){
       src=allTickets.filter(t=>t.departamento==='Mantenimiento'&&PROYECTOS_CATS.includes(t.categoria));
+    } else if(deptFilter==='Mantenimiento'){
+      src=allTickets.filter(t=>t.departamento==='Mantenimiento'&&!PROYECTOS_CATS.includes(t.categoria));
     } else {
       src=deptFilter==='todos'?allTickets:allTickets.filter(t=>t.departamento===deptFilter);
     }
