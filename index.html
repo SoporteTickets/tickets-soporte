@@ -9,7 +9,7 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-:root{--bg:#fff;--bg2:#f7f7f5;--bg3:#f0efe9;--text:#1a1a1a;--text2:#6b6a65;--text3:#9a9891;--border:rgba(0,0,0,0.12);--border2:rgba(0,0,0,0.22);--radius:8px;--radius-lg:12px;--blue-bg:#E6F1FB;--blue-text:#185FA5;--amber-bg:#FAEEDA;--amber-text:#854F0B;--green-bg:#EAF3DE;--green-text:#3B6D11;--gray-bg:#F1EFE8;--gray-text:#5F5E5A;--red-bg:#FCEBEB;--red-text:#A32D2D;--purple-bg:#F0EAFB;--purple-text:#6B21A8;--accent:#2563eb;}
+:root{--bg:#fff;--bg2:#f7f7f5;--bg3:#f0efe9;--text:#1a1a1a;--text2:#6b6a65;--text3:#9a9891;--border:rgba(0,0,0,0.12);--border2:rgba(0,0,0,0.22);--radius:8px;--radius-lg:12px;--blue-bg:#E6F1FB;--blue-text:#185FA5;--amber-bg:#FAEEDA;--amber-text:#854F0B;--green-bg:#EAF3DE;--green-text:#3B6D11;--gray-bg:#F1EFE8;--gray-text:#5F5E5A;--red-bg:#FCEBEB;--red-text:#A32D2D;--purple-bg:#F0EAFB;--purple-text:#6B21A8;}
 @media(prefers-color-scheme:dark){:root{--bg:#1e1e1c;--bg2:#252523;--bg3:#2c2c29;--text:#e8e6df;--text2:#9a9891;--text3:#6b6a65;--border:rgba(255,255,255,0.1);--border2:rgba(255,255,255,0.2);--blue-bg:#0c447c;--blue-text:#B5D4F4;--amber-bg:#633806;--amber-text:#FAC775;--green-bg:#27500A;--green-text:#C0DD97;--gray-bg:#444441;--gray-text:#D3D1C7;--red-bg:#791F1F;--red-text:#F7C1C1;--purple-bg:#3B1A5F;--purple-text:#D8B4FE;}}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg3);color:var(--text);font-size:14px;min-height:100vh}
 .login-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:1rem}
@@ -134,20 +134,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .btn-export:hover{opacity:.85}
 .rf-select{font-size:12px;padding:5px 8px;border:.5px solid var(--border2);border-radius:var(--radius);background:var(--bg);color:var(--text);height:30px;outline:none}
 .rf-input{font-size:12px;padding:5px 8px;border:.5px solid var(--border2);border-radius:var(--radius);background:var(--bg);color:var(--text);height:30px;outline:none}
-.pagination{display:flex;align-items:center;justify-content:center;gap:6px;margin-top:1rem;flex-wrap:wrap}
-.page-btn{background:var(--bg);border:.5px solid var(--border2);border-radius:var(--radius);padding:0 12px;height:32px;font-size:13px;cursor:pointer;color:var(--text2);min-width:32px}
-.page-btn:hover{background:var(--bg2)}
-.page-btn.active{background:var(--text);color:var(--bg);border-color:var(--text);font-weight:500}
-.page-btn:disabled{opacity:.4;cursor:not-allowed}
-.page-info{font-size:12px;color:var(--text3);margin:0 4px}
-.confirm-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);align-items:center;justify-content:center;z-index:300;padding:1rem}
-.confirm-overlay.open{display:flex}
-.confirm-box{background:var(--bg);border-radius:var(--radius-lg);border:.5px solid var(--border2);width:100%;max-width:360px;padding:1.5rem}
-.confirm-box h3{font-size:16px;font-weight:500;margin-bottom:.5rem}
-.confirm-box p{font-size:13px;color:var(--text2);margin-bottom:1.25rem;line-height:1.5}
-.confirm-btns{display:flex;gap:8px;justify-content:flex-end}
-.app-loading{position:fixed;inset:0;background:var(--bg3);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:500;font-size:13px;color:var(--text3)}
-.app-loading-logo{font-size:24px;font-weight:700;color:var(--text);margin-bottom:1rem;letter-spacing:-.02em}
 .footer{background:#1a1a1a;padding:12px 1.5rem;text-align:center;font-size:11px;color:rgba(255,255,255,0.3);letter-spacing:.03em;flex-shrink:0}
 .footer span{color:rgba(255,255,255,0.5)}
 @media(max-width:600px){.stats{grid-template-columns:1fr 1fr}.row2{grid-template-columns:1fr}.topbar-title{font-size:12px}.reports-grid{grid-template-columns:1fr}.report-summary{grid-template-columns:1fr 1fr}}
@@ -235,13 +221,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
           <select id="f-cat" onchange="render()"><option value="">Todas las categorías</option></select>
           <select id="f-hotel" onchange="render()"><option value="">Todos los hoteles</option><option>Hotel Plaza Juan Carlos</option><option>Hotel Plaza San Martín</option><option>Hotel Plaza del Libertador</option><option>Hotel Plaza del General</option></select>
           <select id="f-prio" onchange="render()"><option value="">Todas las prioridades</option><option>Alta</option><option>Media</option><option>Baja</option></select>
-          <input type="date" id="f-desde" onchange="render()" title="Desde" style="font-size:13px;padding:6px 10px;border-radius:var(--radius);border:.5px solid var(--border2);background:var(--bg);color:var(--text);height:34px;outline:none">
-          <input type="date" id="f-hasta" onchange="render()" title="Hasta" style="font-size:13px;padding:6px 10px;border-radius:var(--radius);border:.5px solid var(--border2);background:var(--bg);color:var(--text);height:34px;outline:none">
         </div>
       </div>
       <div class="ticket-list" id="list"><div class="loading"><i class="ti ti-loader" style="font-size:20px;display:block;margin:0 auto 8px"></i>Cargando…</div></div>
     </div>
-    <div class="pagination" id="pagination" style="display:none"></div>
     <div id="view-reportes" style="display:none">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;flex-wrap:wrap;gap:.75rem">
         <div><h2>Reportes</h2><p id="report-sub" style="font-size:12px;color:var(--text3);margin-top:2px"></p></div>
@@ -277,22 +260,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   </div>
   <div class="footer">Desarrollado por <span>Josué Aguilar</span> · Técnico TI · Distrito Hotelero Plaza San Martín · 2026</div>
 </div>
-<div class="app-loading" id="app-loading">
-  <div class="app-loading-logo" style="font-size:16px;letter-spacing:.08em;text-transform:uppercase;font-weight:400">DISTRITO HOTELERO</div>
-  <div style="margin-top:4px;font-size:11px;opacity:.5">Plaza San Martín</div>
-</div>
-
-<div class="confirm-overlay" id="confirm-overlay">
-  <div class="confirm-box">
-    <h3 id="confirm-title">¿Estás seguro?</h3>
-    <p id="confirm-msg">Esta acción no se puede deshacer.</p>
-    <div class="confirm-btns">
-      <button class="btn-cancel" onclick="confirmResolve(false)">Cancelar</button>
-      <button class="btn-danger" id="confirm-ok-btn" onclick="confirmResolve(true)">Confirmar</button>
-    </div>
-  </div>
-</div>
-
 <div class="toast" id="toast"><i class="ti ti-check" id="toast-icon"></i><span id="toast-msg"></span></div>
 <div class="modal-wrap" id="modal-new">
   <div class="modal">
@@ -331,15 +298,14 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 const SUPABASE_URL='https://afrdmrumamvmldmjddrc.supabase.co';
 const SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFmcmRtcnVtYW12bWxkbWpkZHJjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM2ODU1MDUsImV4cCI6MjA5OTI2MTUwNX0.0MZLA-_G_IUt0TUQY1Oj-szlMjB_e3hzkVzUMFbcOGI';
 const sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
-const CATS={TI:['Red','Hardware','Software','Accesos','Impresoras','UPS','Cámaras','Soporte SKILL','Habitaciones'],Mantenimiento:['Pintura','Tabla yeso','Albañilería','Diseño','Tapiz/Alfombra','Carpintería','Aire acondicionado y Refrigeración','Electricidad y Torre','Compras','Tapicería','Taller de Soldadura','Fontanería','Ascensores']};
-const catIcon={Red:'ti-wifi',Hardware:'ti-device-desktop',Software:'ti-apps',Accesos:'ti-key',Impresoras:'ti-printer','UPS':'ti-battery-charging','Cámaras':'ti-camera','Soporte SKILL':'ti-school','Habitaciones':'ti-bed','Pintura':'ti-brush','Tabla yeso':'ti-wall','Albañilería':'ti-building-arch','Diseño':'ti-palette','Tapiz/Alfombra':'ti-layout-grid','Carpintería':'ti-hammer','Aire acondicionado y Refrigeración':'ti-wind','Electricidad y Torre':'ti-bolt','Compras':'ti-shopping-cart','Tapicería':'ti-armchair','Taller de Soldadura':'ti-flame','Fontanería':'ti-droplet','Ascensores':'ti-elevator'};
-const catColor={Red:'#185FA5',Hardware:'#185FA5',Software:'#185FA5',Accesos:'#185FA5',Impresoras:'#185FA5','UPS':'#185FA5','Cámaras':'#185FA5','Soporte SKILL':'#185FA5','Habitaciones':'#185FA5','Pintura':'#92700A','Tabla yeso':'#92700A','Albañilería':'#92700A','Diseño':'#92700A','Tapiz/Alfombra':'#92700A','Carpintería':'#7B4F2E','Aire acondicionado y Refrigeración':'#1A6B2A','Electricidad y Torre':'#CC5500','Compras':'#5A7A00','Tapicería':'#6B4FA8','Taller de Soldadura':'#555555','Fontanería':'#B71C1C','Ascensores':'#2E5FA8'};
-const catBg={Red:'#E6F1FB',Hardware:'#E6F1FB',Software:'#E6F1FB',Accesos:'#E6F1FB',Impresoras:'#E6F1FB','UPS':'#E6F1FB','Cámaras':'#E6F1FB','Soporte SKILL':'#E6F1FB','Habitaciones':'#E6F1FB','Pintura':'#FFF9C4','Tabla yeso':'#FFF9C4','Albañilería':'#FFF9C4','Diseño':'#FFF9C4','Tapiz/Alfombra':'#FFF9C4','Carpintería':'#F3E5D8','Aire acondicionado y Refrigeración':'#E8F5E9','Electricidad y Torre':'#FFF0E6','Compras':'#F4F9E4','Tapicería':'#F0EAF9','Taller de Soldadura':'#F0F0F0','Fontanería':'#FFEBEE','Ascensores':'#E8EEF9'};
+const CATS={TI:['Red','Hardware','Software','Accesos','Impresoras','UPS','Cámaras','Soporte SKILL'],Mantenimiento:['Pintura','Tabla yeso','Albañilería','Diseño','Tapiz/Alfombra','Carpintería','Aire acondicionado y Refrigeración','Electricidad y Torre','Compras','Tapicería','Taller de Soldadura','Fontanería','Ascensores']};
+const catIcon={Red:'ti-wifi',Hardware:'ti-device-desktop',Software:'ti-apps',Accesos:'ti-key',Impresoras:'ti-printer','UPS':'ti-battery-charging','Cámaras':'ti-camera','Soporte SKILL':'ti-school','Pintura':'ti-brush','Tabla yeso':'ti-wall','Albañilería':'ti-building-arch','Diseño':'ti-palette','Tapiz/Alfombra':'ti-layout-grid','Carpintería':'ti-hammer','Aire acondicionado y Refrigeración':'ti-wind','Electricidad y Torre':'ti-bolt','Compras':'ti-shopping-cart','Tapicería':'ti-armchair','Taller de Soldadura':'ti-flame','Fontanería':'ti-droplet','Ascensores':'ti-elevator'};
+const catColor={Red:'#185FA5',Hardware:'#185FA5',Software:'#185FA5',Accesos:'#185FA5',Impresoras:'#185FA5','UPS':'#185FA5','Cámaras':'#185FA5','Soporte SKILL':'#185FA5','Pintura':'#92700A','Tabla yeso':'#92700A','Albañilería':'#92700A','Diseño':'#92700A','Tapiz/Alfombra':'#92700A','Carpintería':'#7B4F2E','Aire acondicionado y Refrigeración':'#1A6B2A','Electricidad y Torre':'#CC5500','Compras':'#5A7A00','Tapicería':'#6B4FA8','Taller de Soldadura':'#555555','Fontanería':'#B71C1C','Ascensores':'#2E5FA8'};
+const catBg={Red:'#E6F1FB',Hardware:'#E6F1FB',Software:'#E6F1FB',Accesos:'#E6F1FB',Impresoras:'#E6F1FB','UPS':'#E6F1FB','Cámaras':'#E6F1FB','Soporte SKILL':'#E6F1FB','Pintura':'#FFF9C4','Tabla yeso':'#FFF9C4','Albañilería':'#FFF9C4','Diseño':'#FFF9C4','Tapiz/Alfombra':'#FFF9C4','Carpintería':'#F3E5D8','Aire acondicionado y Refrigeración':'#E8F5E9','Electricidad y Torre':'#FFF0E6','Compras':'#F4F9E4','Tapicería':'#F0EAF9','Taller de Soldadura':'#F0F0F0','Fontanería':'#FFEBEE','Ascensores':'#E8EEF9'};
 const statClass={Abierto:'b-abierto','En proceso':'b-en-proceso',Resuelto:'b-resuelto',Cerrado:'b-cerrado'};
 const prioClass={Alta:'prio-alta',Media:'prio-media',Baja:'prio-baja'};
 const prioIcon={Alta:'ti-arrow-up',Media:'ti-minus',Baja:'ti-arrow-down'};
-let allTickets=[],currentId=null,nextNum=1,currentUser=null,userRole=null,userDept=null,deptFilter='todos',currentPage=1;
-const PAGE_SIZE=15;
+let allTickets=[],currentId=null,nextNum=1,currentUser=null,userRole=null,userDept=null,deptFilter='todos';
 let charts={},reportFilters={dept:'',hotel:'',estado:'',prio:'',desde:'',hasta:''};
 
 function pad(n){return 'TK-'+String(n).padStart(3,'0')}
@@ -349,32 +315,6 @@ function fmt(d){if(!d)return '—';const[y,m,dy]=d.split('-');return dy+'/'+m+'/
 function fmtTime(t){return t?t.slice(0,5):''}
 function initials(n){return(n||'?').split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase()}
 function isAdmin(){return userRole==='superadmin'||userRole==='admin'}
-
-function sanitize(str){
-  if(!str)return '';
-  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');
-}
-
-let confirmResolve=null;
-function showConfirm(title,msg,btnLabel='Eliminar'){
-  return new Promise(resolve=>{
-    document.getElementById('confirm-title').textContent=title;
-    document.getElementById('confirm-msg').textContent=msg;
-    document.getElementById('confirm-ok-btn').textContent=btnLabel;
-    document.getElementById('confirm-overlay').classList.add('open');
-    confirmResolve=(result)=>{
-      document.getElementById('confirm-overlay').classList.remove('open');
-      resolve(result);
-    };
-  });
-}
-
-function hideLoading(){
-  const el=document.getElementById('app-loading');
-  if(el)el.style.display='none';
-  const login=document.getElementById('login-screen');
-  if(login&&login.style.display==='none'&&!currentUser)login.style.display='flex';
-}
 
 function togglePass(inputId,eyeId){
   const input=document.getElementById(inputId);
@@ -450,7 +390,6 @@ async function initApp(user){
   document.getElementById('page-title').textContent=userRole==='superadmin'?'Todas las solicitudes':userRole==='admin'?'Solicitudes — '+userDept:'Mis solicitudes';
   updateFilterCats();
   await loadTickets();
-  hideLoading();
 }
 
 function updateFilterCats(){
@@ -460,7 +399,7 @@ function updateFilterCats(){
 }
 
 function setDeptFilter(dept){
-  deptFilter=dept;currentPage=1;
+  deptFilter=dept;
   ['todos','TI','Mantenimiento'].forEach(d=>{document.getElementById('tab-'+d).classList.toggle('active',d===dept);});
   updateFilterCats();render();
 }
@@ -487,19 +426,12 @@ async function loadTickets(){
 }
 
 function getFiltered(){
-  const orden={'Abierto':0,'En proceso':1,'Resuelto':2,'Cerrado':3};
-  if(!isAdmin())return [...allTickets].sort((a,b)=>{
-    const oa=orden[a.estado]??99;
-    const ob=orden[b.estado]??99;
-    if(oa!==ob)return oa-ob;
-    return b.id-a.id;
-  });
+  if(!isAdmin())return allTickets;
   const q=document.getElementById('search').value.toLowerCase();
   const est=document.getElementById('f-estado').value;
   const cat=document.getElementById('f-cat').value;
   const hotel=document.getElementById('f-hotel').value;
   const prio=document.getElementById('f-prio').value;
-  const orden={'Abierto':0,'En proceso':1,'Resuelto':2,'Cerrado':3};
   return allTickets.filter(t=>{
     if(deptFilter!=='todos'&&t.departamento!==deptFilter)return false;
     if(q&&!t.titulo.toLowerCase().includes(q)&&!(t.descripcion||'').toLowerCase().includes(q))return false;
@@ -507,16 +439,7 @@ function getFiltered(){
     if(cat&&t.categoria!==cat)return false;
     if(hotel&&t.hotel!==hotel)return false;
     if(prio&&t.prioridad!==prio)return false;
-    const desde=document.getElementById('f-desde')?document.getElementById('f-desde').value:'';
-    const hasta=document.getElementById('f-hasta')?document.getElementById('f-hasta').value:'';
-    if(desde&&t.fecha<desde)return false;
-    if(hasta&&t.fecha>hasta)return false;
     return true;
-  }).sort((a,b)=>{
-    const oa=orden[a.estado]??99;
-    const ob=orden[b.estado]??99;
-    if(oa!==ob)return oa-ob;
-    return b.id-a.id;
   });
 }
 
@@ -534,35 +457,8 @@ function render(){
   }
   const list=getFiltered();
   const el=document.getElementById('list');
-  const paginationEl=document.getElementById('pagination');
-  if(!list.length){
-    el.innerHTML='<div class="empty"><i class="ti ti-ticket-off"></i>No hay solicitudes que mostrar.<br><br><button onclick="openNew()" style="margin-top:8px;background:var(--text);color:var(--bg);border:none;border-radius:8px;padding:8px 16px;cursor:pointer;font-size:13px">Crear primera solicitud</button></div>';
-    paginationEl.style.display='none';
-    return;
-  }
-  const totalPages=Math.ceil(list.length/PAGE_SIZE);
-  if(currentPage>totalPages)currentPage=1;
-  const start=(currentPage-1)*PAGE_SIZE;
-  const pageList=list.slice(start,start+PAGE_SIZE);
-  // Render pagination
-  if(list.length>PAGE_SIZE){
-    paginationEl.style.display='flex';
-    let html='<button class="page-btn" onclick="goPage('+(currentPage-1)+')" '+(currentPage===1?'disabled':'')+'>‹</button>';
-    for(let i=1;i<=totalPages;i++){
-      if(i===1||i===totalPages||Math.abs(i-currentPage)<=1){
-        html+='<button class="page-btn '+(i===currentPage?'active':'')+'" onclick="goPage('+i+')">'+i+'</button>';
-      }else if(Math.abs(i-currentPage)===2){
-        html+='<span class="page-info">…</span>';
-      }
-    }
-    html+='<button class="page-btn" onclick="goPage('+(currentPage+1)+')" '+(currentPage===totalPages?'disabled':'')+'>›</button>';
-    html+='<span class="page-info">'+list.length+' tickets · Página '+currentPage+' de '+totalPages+'</span>';
-    paginationEl.innerHTML=html;
-  }else{
-    paginationEl.style.display='none';
-  }
-
-  el.innerHTML=pageList.map(t=>{
+  if(!list.length){el.innerHTML='<div class="empty"><i class="ti ti-ticket-off"></i>No hay solicitudes que mostrar.<br><br><button onclick="openNew()" style="margin-top:8px;background:var(--text);color:var(--bg);border:none;border-radius:8px;padding:8px 16px;cursor:pointer;font-size:13px">Crear primera solicitud</button></div>';return;}
+  el.innerHTML=list.map(t=>{
     const deptBadge=t.departamento==='TI'?'<span class="badge b-ti">TI</span>':'<span class="badge b-mant">Mantenimiento</span>';
     return '<div class="ticket" onclick="openDet('+t.id+')" role="button" tabindex="0">'
       +'<div class="ticket-top"><div class="ticket-title">'+t.titulo+'</div><div class="ticket-id">'+t.codigo+'</div></div>'
@@ -573,15 +469,6 @@ function render(){
       +'<div style="display:flex;align-items:center;gap:10px"><span class="prio '+prioClass[t.prioridad]+'"><i class="ti '+prioIcon[t.prioridad]+'"></i>'+t.prioridad+'</span><span class="date">'+fmt(t.fecha)+'</span></div></div>'
       +'</div>';
   }).join('');
-}
-
-function goPage(page){
-  const list=getFiltered();
-  const totalPages=Math.ceil(list.length/PAGE_SIZE);
-  if(page<1||page>totalPages)return;
-  currentPage=page;
-  render();
-  window.scrollTo({top:0,behavior:'smooth'});
 }
 
 function updateCats(){
@@ -690,8 +577,7 @@ async function saveObs(){
 }
 
 async function deleteTicket(){
-  const ok=await showConfirm('¿Eliminar esta solicitud?','Esta acción no se puede deshacer. El ticket será eliminado permanentemente.','Eliminar');
-  if(!ok)return;
+  if(!confirm('¿Eliminar esta solicitud?'))return;
   const codigo=allTickets.find(x=>x.id===currentId)?.codigo;
   const{error}=await sb.from('tickets').delete().eq('id',currentId);
   if(error){showToast('Error: '+error.message,true);return;}
@@ -699,7 +585,6 @@ async function deleteTicket(){
 }
 
 function getReportTickets(){
-  const orden={'Abierto':0,'En proceso':1,'Resuelto':2,'Cerrado':3};
   return allTickets.filter(t=>{
     if(reportFilters.dept&&t.departamento!==reportFilters.dept)return false;
     if(reportFilters.hotel&&t.hotel!==reportFilters.hotel)return false;
@@ -778,15 +663,8 @@ function showToast(msg,isError=false){
 }
 
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeNew();closeDet();}});
-// Timeout de seguridad — si en 4 segundos no carga, muestra el login
-const loadingTimeout=setTimeout(()=>hideLoading(),4000);
-sb.auth.getSession().then(({data:{session}})=>{
-  clearTimeout(loadingTimeout);
-  if(session){initApp(session.user);}
-  else{hideLoading();}
-});
+sb.auth.getSession().then(({data:{session}})=>{if(session)initApp(session.user);});
 sb.auth.onAuthStateChange((_,session)=>{if(!session&&currentUser)doLogout();});
 </script>
 </body>
 </html>
-
