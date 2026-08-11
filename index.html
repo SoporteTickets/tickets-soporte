@@ -220,6 +220,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
           <button class="dept-tab active" id="tab-todos" onclick="setDeptFilter('todos')"><i class="ti ti-layout-grid" style="margin-right:4px"></i>Todos</button>
           <button class="dept-tab" id="tab-TI" onclick="setDeptFilter('TI')"><i class="ti ti-device-desktop" style="margin-right:4px"></i>TI</button>
           <button class="dept-tab" id="tab-Mantenimiento" onclick="setDeptFilter('Mantenimiento')"><i class="ti ti-tool" style="margin-right:4px"></i>Mantenimiento</button>
+          <button class="dept-tab" id="tab-Proyectos" onclick="setDeptFilter('Proyectos')"><i class="ti ti-clipboard-list" style="margin-right:4px"></i>Proyectos</button>
         </div>
       </div>
       <div id="stats-wrap" style="display:none">
@@ -339,6 +340,7 @@ const statClass={Abierto:'b-abierto','En proceso':'b-en-proceso',Resuelto:'b-res
 const prioClass={Alta:'prio-alta',Media:'prio-media',Baja:'prio-baja'};
 const prioIcon={Alta:'ti-arrow-up',Media:'ti-minus',Baja:'ti-arrow-down'};
 const ESTADO_ORDEN={Abierto:0,'En proceso':1,Resuelto:2,Cerrado:3};
+const PROYECTOS_CATS=['Pintura','Tabla yeso','Albañilería','Diseño','Tapiz/Alfombra'];
 const PAGE_SIZE=15;
 
 let allTickets=[],currentId=null,nextNum=1,currentUser=null,userRole=null,userDept=null,deptFilter='todos',currentPage=1;
@@ -449,7 +451,10 @@ function updateFilterCats(){
 
 function setDeptFilter(dept){
   deptFilter=dept;currentPage=1;
-  ['todos','TI','Mantenimiento'].forEach(d=>{document.getElementById('tab-'+d).classList.toggle('active',d===dept);});
+  ['todos','TI','Mantenimiento','Proyectos'].forEach(d=>{
+    const el=document.getElementById('tab-'+d);
+    if(el)el.classList.toggle('active',d===dept);
+  });
   updateFilterCats();render();
 }
 
@@ -495,7 +500,9 @@ function getFiltered(){
   const base=isAdmin()?allTickets:allTickets;
   return getSorted(base.filter(t=>{
     if(!isAdmin()&&t.user_id!==currentUser.id)return false;
-    if(deptFilter!=='todos'&&t.departamento!==deptFilter)return false;
+    if(deptFilter==='Proyectos'){
+      if(t.departamento!=='Mantenimiento'||!PROYECTOS_CATS.includes(t.categoria))return false;
+    } else if(deptFilter!=='todos'&&t.departamento!==deptFilter)return false;
     if(q&&!t.titulo.toLowerCase().includes(q)&&!(t.descripcion||'').toLowerCase().includes(q))return false;
     if(est&&t.estado!==est)return false;
     if(cat&&t.categoria!==cat)return false;
@@ -522,7 +529,12 @@ function goPage(page){
 
 function render(){
   if(isAdmin()){
-    const src=deptFilter==='todos'?allTickets:allTickets.filter(t=>t.departamento===deptFilter);
+    let src;
+    if(deptFilter==='Proyectos'){
+      src=allTickets.filter(t=>t.departamento==='Mantenimiento'&&PROYECTOS_CATS.includes(t.categoria));
+    } else {
+      src=deptFilter==='todos'?allTickets:allTickets.filter(t=>t.departamento===deptFilter);
+    }
     document.getElementById('s-total').textContent=src.length;
     document.getElementById('s-open').textContent=src.filter(t=>t.estado==='Abierto').length;
     document.getElementById('s-proc').textContent=src.filter(t=>t.estado==='En proceso').length;
